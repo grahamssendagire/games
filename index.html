@@ -37,6 +37,8 @@
        <input type="number"min="1"max="100"required id ="guessField"
        class = "guessField" fdprocessed id="ril6se">
        <input type="submit"value="submit guess"class = "guessSubmit"fdprocessed id="g0j7bf"
+       class = "guessField" fdprocessed id="ril6se">
+       <input type="reset"value="Reset Game"class = "Reset Game"fdprocessed id="g0j7bf"
       </div>
       <div class="resultParas">
        <p class="guesses"></p>
@@ -45,32 +47,71 @@
       </div>
     </main>
     <script>
+      //This section of the code sets up the variables and constants we need to store the data our program will use.
+      //The first variable — randomNumber — is assigned a random number between 1 and 100, 
+      //Calculated using a mathematical algorithm.
+      // The first three constants are each made to store a reference to the results paragraphs in our HTML,
+      // and are used to insert values into the paragraphs later on in the code (note how they are inside a <div> element, which is itself used to select all three later on for resetting, when we restart the game):
+      // NUMBER ONE: Initiation
+      //A random number between 1 and 100 is generated using Math.random(), which produces a floating-point number between 0 and 1. This value is multiplied by 100 and floored (rounded down to the nearest whole number) to get an integer between 0 and 99, and then 1 is added to get a range from 1 to 100.
       let randomNumber = Math.floor(Math.random() * 100) + 1;
+      //NUMBER TWO:Element Selectors:
+      //These lines select various elements from the HTML document using querySelector()
+      //guesses: Displays previous guesses.
+      //lastResult: Displays the last guess result.
+      //lowOrHi: Provides hints about the guess (too high or too low).
+      //guessSubmit: The button the player clicks to submit their guess.
+      //guessField: The input field where the player types their guess
       const guesses = document.querySelector('.guesses');
       const lastResult = document.querySelector('.lastResult');
       const lowOrHi = document.querySelector('.lowOrHi');
+      // The next two constants store references to the form text input and submit button and are used to control submitting the guess later on.
       const guessSubmit = document.querySelector('.guessSubmit');
       const guessField = document.querySelector('.guessField');
+      // Our final two variables store a guess count of 1 (used to keep track of how many guesses the player has had), 
+      //and a reference to a reset button that doesn't exist yet (but will later).
+      //NUMBER THREE: Game State Variables:
+      //guessCount: keeps track of how many guesses the player has made.
+      //resetButton: will be used to store a reference to the button that allows starting a new game
       let guessCount = 1;
       let resetButton;
+      // Functions are reusable blocks of code that you can write once and run again and again,
+      // saving the need to keep repeating code all the time. This is really useful. 
+      //There are a number of ways to define functions, but for now we'll concentrate on one simple type. Here we have defined a function by using the keyword function, followed by a name, with parentheses put after it. After that, we put two curly braces ({ }).
+      // Inside the curly braces goes all the code that we want to run whenever we call the function.
+      // NUMBER FOUR: Converting from a user's guess to a number
+      //Returning to our checkGuess() function,
+      // I think it's safe to say that we don't want it to just spit out a placeholder message.
+      // We want it to check whether a player's guess is correct or not, and respond appropriately.
 
+      //At this point, replace your current checkGuess() function with this version instead:
+      //This function is triggered when the player submits a guess.
+      //It first converts the user input (from the guess field) into a number using Number().
+     
       function checkGuess() {
         const userGuess = Number(guessField.value);
+     //NUMBER FIVE:Display Previous Guesses:
         if (guessCount === 1) {
           guesses.textContent = 'Previous guesses: ';
         }
-
+     // If it's the first guess, it initializes the guesses text. Then, it appends the current guess to the display.
         guesses.textContent += userGuess + ' ';
-
+     //If the guess is correct, it displays a congratulatory message,
+     //changes the background color of the last result, wipes hints, and calls setGameOver() to end the game.
         if (userGuess === randomNumber) {
           lastResult.textContent = 'Congratulations! You got it right!';
           lastResult.style.backgroundColor = 'green';
           lowOrHi.textContent = '';
           setGameOver();
+      // NUMBER SIX :Game Over Conditions:
+      // If the player has made 10 guesses without finding the correct number, 
+      // It indicates the game is over.
         } else if (guessCount === 10) {
           lastResult.textContent = '!!!GAME OVER!!!';
           lowOrHi.textContent = '';
           setGameOver();
+      //If the guess is incorrect, 
+      //it displays "Wrong!" and provides hints about whether the last guess was too low or too high.
         } else {
           lastResult.textContent = 'Wrong!';
           lastResult.style.backgroundColor = 'red';
@@ -80,14 +121,23 @@
             lowOrHi.textContent = 'Last guess was too high!';
           }
         }
-
+        //NUMBER SEVEN: Increment Guess Count:
+        //The guess count is incremented, the input field is cleared,
+        //and focus is returned to it for the next guess.
         guessCount++;
         guessField.value = '';
         guessField.focus();
       }
+      // This line sets up an event listener for the "guess submit" button. When clicked, 
+      // it calls the checkGuess function.
+      // NUMBER EIGHT:Button Click Event:
+      // This line sets up an event listener for the "guess submit" button. When clicked,
+      // it calls the checkGuess function.
 
       guessSubmit.addEventListener('click', checkGuess);
-
+      //NUMBER NINE : Game Over Functionality:
+      //This function disables input fields and creates a 'Start new game' button when the game ends, 
+      //allowing the player to reset the game
       function setGameOver() {
         guessField.disabled = true;
         guessSubmit.disabled = true;
@@ -96,7 +146,9 @@
         document.body.appendChild(resetButton);
         resetButton.addEventListener('click', resetGame);
       }
-
+      // Resetting the Game:
+      //In this function, the game state is reset.
+      // It clears all text displays, re-enables input fields, generates a new random number, and prepares the interface for a new game.
       function resetGame() {
         guessCount = 1;
         const resetParas = document.querySelectorAll('.resultParas p');
@@ -112,6 +164,8 @@
         lastResult.style.backgroundColor = 'white';
         randomNumber = Math.floor(Math.random() * 100) + 1;
       }
+      //NOTE: This number guessing game involves elements of user interaction, conditional logic, and DOM manipulation in JavaScript. Players are provided feedback on their guesses, and the game logic is structured to allow for a clean start when a game concludes.
+      //It serves as a good practice example for beginners learning how to work with JavaScript and event handling.
     </script> 
        
 </body>
